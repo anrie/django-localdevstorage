@@ -41,7 +41,7 @@ class HttpStorage(BaseStorage):
             return False
 
     def _url(self, name):
-        return urljoin('/', filepath_to_uri(name))
+        return urljoin(self.base_url, filepath_to_uri(name))
 
     def _path(self, name):
         if self.fallback_domain:
