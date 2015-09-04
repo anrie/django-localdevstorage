@@ -17,7 +17,6 @@ class HttpStorageTest(TestCase):
         if os.path.exists(test_dir):
             shutil.rmtree(test_dir)
 
-
     @responses.activate
     def test_http_fallback(self):
         responses.add(
@@ -64,3 +63,10 @@ class HttpStorageTest(TestCase):
             storage = HttpStorage(fallback_domain='https://example.com')
         f = storage.open('foo/test_auth')
         self.assertIn('Authorization', responses.calls[0].request.headers)
+
+    def test_asset_url(self):
+        MEDIA_URL = '/media/'
+        with self.settings(MEDIA_URL=MEDIA_URL):
+            storage = HttpStorage(fallback_domain='http://example.com')
+            url = storage._url('testfile')
+        self.assertIn(MEDIA_URL, url)
